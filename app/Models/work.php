@@ -16,6 +16,8 @@ class work extends Model
         'punch_time_in',
         'punch_time_out',
         'work_status',
+        'work_status_remark',
+        'work_bonus_status',
         'work_bonus_remark',
         'emp_code',
         'emp_team',

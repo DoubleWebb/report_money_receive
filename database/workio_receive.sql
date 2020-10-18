@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2020 at 02:31 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.10
+-- Generation Time: 18 ต.ค. 2020 เมื่อ 03:44 PM
+-- เวอร์ชันของเซิร์ฟเวอร์: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -24,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employee`
+-- โครงสร้างตาราง `employee`
 --
 
 CREATE TABLE `employee` (
@@ -38,7 +39,7 @@ CREATE TABLE `employee` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `employee`
+-- dump ตาราง `employee`
 --
 
 INSERT INTO `employee` (`emp_id`, `emp_code`, `emp_team`, `emp_firstname`, `emp_lastname`, `emp_status`, `emp_salary`) VALUES
@@ -49,7 +50,7 @@ INSERT INTO `employee` (`emp_id`, `emp_code`, `emp_team`, `emp_firstname`, `emp_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `finger`
+-- โครงสร้างตาราง `finger`
 --
 
 CREATE TABLE `finger` (
@@ -60,7 +61,7 @@ CREATE TABLE `finger` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `finger`
+-- dump ตาราง `finger`
 --
 
 INSERT INTO `finger` (`finger_id`, `emp_code`, `punch_time`, `emp_team`) VALUES
@@ -141,7 +142,7 @@ INSERT INTO `finger` (`finger_id`, `emp_code`, `punch_time`, `emp_team`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `setting`
+-- โครงสร้างตาราง `setting`
 --
 
 CREATE TABLE `setting` (
@@ -151,7 +152,7 @@ CREATE TABLE `setting` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `setting`
+-- dump ตาราง `setting`
 --
 
 INSERT INTO `setting` (`setting_id`, `setting_name`, `setting_value`) VALUES
@@ -160,7 +161,7 @@ INSERT INTO `setting` (`setting_id`, `setting_name`, `setting_value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `special_day`
+-- โครงสร้างตาราง `special_day`
 --
 
 CREATE TABLE `special_day` (
@@ -171,7 +172,7 @@ CREATE TABLE `special_day` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `special_day`
+-- dump ตาราง `special_day`
 --
 
 INSERT INTO `special_day` (`special_day_id`, `special_day_date`, `special_day_remark`, `special_day_status`) VALUES
@@ -185,20 +186,28 @@ INSERT INTO `special_day` (`special_day_id`, `special_day_date`, `special_day_re
 -- --------------------------------------------------------
 
 --
--- Table structure for table `team`
+-- โครงสร้างตาราง `team`
 --
 
 CREATE TABLE `team` (
   `team_id` int(12) NOT NULL,
   `team_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `team_location` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `team_day_off` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `team_last_send` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- dump ตาราง `team`
+--
+
+INSERT INTO `team` (`team_id`, `team_name`, `team_location`, `team_day_off`, `team_last_send`) VALUES
+(1, 'doubleweb', 'Chiang Mai', '0', '2020-10-18 11:05:26');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- โครงสร้างตาราง `users`
 --
 
 CREATE TABLE `users` (
@@ -212,7 +221,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- dump ตาราง `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `password`, `view_show`, `created_at`, `updated_at`) VALUES
@@ -221,7 +230,7 @@ INSERT INTO `users` (`id`, `name`, `username`, `password`, `view_show`, `created
 -- --------------------------------------------------------
 
 --
--- Table structure for table `work`
+-- โครงสร้างตาราง `work`
 --
 
 CREATE TABLE `work` (
@@ -230,12 +239,23 @@ CREATE TABLE `work` (
   `date_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `punch_time_in` datetime DEFAULT NULL,
   `punch_time_out` datetime DEFAULT NULL,
-  `work_status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `work_status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '0 = ไม่มาทำงาน 1 = มาทำงาน',
+  `work_status_remark` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '0 = วันปกติ 1 = วันหยุด 2 = ลา 3 =  ป่วย 4 = เปลี่ยนวันหยุด',
+  `work_bonus_status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `work_bonus_remark` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emp_team` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `work_day_money` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- dump ตาราง `work`
+--
+
+INSERT INTO `work` (`work_id`, `date_work`, `date_name`, `punch_time_in`, `punch_time_out`, `work_status`, `work_status_remark`, `work_bonus_status`, `work_bonus_remark`, `emp_code`, `emp_team`, `work_day_money`) VALUES
+(1, '2020-10-18', 'Sunday', NULL, NULL, '1', '1', '0', NULL, '001', '1', NULL),
+(2, '2020-10-18', 'Sunday', NULL, NULL, '1', '1', '0', NULL, '002', '1', NULL),
+(3, '2020-10-18', 'Sunday', NULL, NULL, '1', '1', '0', NULL, '003', '1', NULL);
 
 --
 -- Indexes for dumped tables
@@ -315,7 +335,7 @@ ALTER TABLE `special_day`
 -- AUTO_INCREMENT for table `team`
 --
 ALTER TABLE `team`
-  MODIFY `team_id` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `team_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -327,7 +347,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `work`
 --
 ALTER TABLE `work`
-  MODIFY `work_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `work_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

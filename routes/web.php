@@ -15,6 +15,11 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::get('do_logout', 'Auth\AuthController@Do_Logout')->name('do_logout');
 });
 
+// Cronjob
+Route::group(['prefix' => 'api/cronjob'], function () {
+    Route::get('create_date_work', 'Cronjob\Create_Date_Controller@Create_Date_Work');
+});
+
 // All API Receive
 Route::group(['prefix' => 'api/receive'], function () {
     // Employee

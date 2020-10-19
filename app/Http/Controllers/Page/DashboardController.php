@@ -16,7 +16,7 @@ class DashboardController extends Controller
 {
     public function Dashboard(Request $request)
     {
-        return view('page\dashboard');
+        return view('page/dashboard');
     }
 
     public function Get_Employee_All(Request $request)

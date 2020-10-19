@@ -16,7 +16,8 @@ class employee extends Model
         'emp_firstname',
         'emp_lastname',
         'emp_status',
-        'emp_salary'
+        'emp_salary',
+        'emp_work_last'
     ];
 
     public $timestamps = false;

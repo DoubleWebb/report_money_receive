@@ -59,9 +59,5 @@
     <script src="{{ url('dashmix/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ url('dashmix/js/plugins/datatables/buttons/dataTables.buttons.min.js') }}"></script>
     <script src="{{ url('dashmix/js/plugins/select2/js/select2.full.min.js') }}"></script>
-    <script>
-        setTimeout(function () {
-            $(".preloader").fadeOut();
-        }, 500);
-    </script>
+    <script src="{{ url('js/page/dashboard.js') }}"></script>
 </html>

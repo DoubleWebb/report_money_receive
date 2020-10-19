@@ -13,6 +13,8 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('do_login', 'Auth\AuthController@Do_Login');
     Route::post('do_register', 'Auth\AuthController@Do_Register');
     Route::get('do_logout', 'Auth\AuthController@Do_Logout')->name('do_logout');
+    // Page
+    Route::get('get_employee_all', 'Page\DashboardController@Get_Employee_All');
 });
 
 // Cronjob

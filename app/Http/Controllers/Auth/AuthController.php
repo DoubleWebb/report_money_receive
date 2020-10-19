@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\View;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,7 @@ class AuthController extends Controller
 {
     public function Login(Request $request)
     {
-        return view('system\login');
+        return View::make('system\login');
     }
 
     public function Do_Login(Request $request)

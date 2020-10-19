@@ -17,7 +17,13 @@ Route::group(['prefix' => 'api/v1'], function () {
 
 // Cronjob
 Route::group(['prefix' => 'api/cronjob'], function () {
+    // Auto
     Route::get('create_date_work', 'Cronjob\Create_Date_Controller@Create_Date_Work');
+    Route::get('update_date_work', 'Cronjob\Update_Date_Controller@Update_Date_Work');
+    Route::get('create_special_day', 'Cronjob\Create_Special_Day_Controller@Create_Special_Day');
+    Route::get('update_money_work', 'Cronjob\Update_Money_Date_Controller@Update_Money_Work');
+    // Mannal
+    Route::get('create_date_work_mannal', 'Cronjob\Create_Date_Controller@Create_Date_Work_Mannal');
 });
 
 // All API Receive

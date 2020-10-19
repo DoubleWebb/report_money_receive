@@ -17,6 +17,7 @@ class FingerController extends Controller
                 // ถ้ายังไม่มีข้อมูล ให้เพิ่มข้อมูลเข้าสู่ระบบ
                 $insert_finger = new finger;
                 $insert_finger->emp_code = $request->emp_code;
+                $insert_finger->finger_date = Carbon::parse($request->punch_time)->format('Y-m-d');
                 $insert_finger->punch_time = $request->punch_time;
                 $insert_finger->emp_team = $request->emp_team;
                 $insert_finger->save();            

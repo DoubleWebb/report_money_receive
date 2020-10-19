@@ -12,6 +12,7 @@ class finger extends Model
 
     protected $fillable = [
         'emp_code',
+        'finger_date',
         'punch_time',
         'emp_team'
     ];

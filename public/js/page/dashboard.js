@@ -80,18 +80,16 @@ var Open_Modl_Salary = function Open_Modl_Salary(e) {
     $("#modal_salary_name_preview").html($(e).attr('firstname') + ' ' + $(e).attr('lastname'));
     
     // เปิดการโหลดข้อมูลสำหรับการแสดง
-    //Load_Empolyee_Data(emp_pin);
-    //
+    Load_Empolyee_Data(emp_code, emp_team);
+    // โหลดข้อมูล พนักงาน
     Load_Select_Empolyee(emp_code, emp_team);
-    /*
-    //
-    Load_Dashboard_Data(emp_pin, $("#select_modal_salary_tab_1").val());
+    // โหลด Dashboard โดยรวม
+    Load_Dashboard_Data(emp_code, emp_team,$("#select_modal_salary_tab_1").val());
 
     $('#modal_salary').on('hidden.bs.modal', function (e) {
         $("#modal_salary_name_preview").html('');
         $("#input_emp_salary").val('');
     });
-    */
 }
 
 var Load_Select_Empolyee = function Load_Select_Empolyee(emp_code, emp_team) {
@@ -127,6 +125,53 @@ var Load_Select_Empolyee = function Load_Select_Empolyee(emp_code, emp_team) {
     })
 }
 
+var Load_Empolyee_Data = function Load_Empolyee_Data(emp_code, emp_team) {
+    axios({
+        method: 'POST',
+        url: '/api/v1/load_empolyee_data',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: {
+            emp_code: emp_code,
+            emp_team: emp_team
+        }
+    })
+    .then(function (response) {
+        $("#input_emp_salary").val(response.data.emp_salary);
+        $("#btn_input_emp_salary").attr('emp_code', response.data.emp_code);
+        $("#btn_input_emp_salary").attr('emp_team', response.data.emp_team);
+    })
+    .catch(function (error) {
+        console.log(error.response);
+    })
+}
+
+var Load_Dashboard_Data = function Load_Dashboard_Data(emp_code, emp_team, select_month) {
+    axios({
+        method: 'POST',
+        url: '/api/v1/load_dashboard_data',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: {
+            emp_code: emp_code,
+            emp_team: emp_team,
+            select_month: select_month
+        }
+    })
+    .then(function (response) {
+        $("#show_block_1").html(response.data.data.bloack_1);
+        $("#show_block_2").html(response.data.data.block_2);
+        $("#show_block_3").html(response.data.data.block_3);
+        $("#show_block_4").html(response.data.data.block_4);
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error.response);
+    })
+}
+
 var Get_Table_Emplyee_Work = function Get_Table_Emplyee_Work() {
     // Talbe 
     $('#table_employee_work').DataTable({
@@ -151,11 +196,14 @@ var Get_Table_Emplyee_Work = function Get_Table_Emplyee_Work() {
             "data": 'punch_time_in',
             "name": 'punch_time_in',
         }, {
-            "data": 'finger_work_every',
-            "name": 'finger_work_every',
+            "data": 'punch_time_out',
+            "name": 'punch_time_out',
         }, {
-            "data": 'money_of_days',
-            "name": 'money_of_days',
+            "data": 'work_text_status',
+            "name": 'work_text_status',
+        }, {
+            "data": 'work_day_money',
+            "name": 'work_day_money',
         }, {
             "data": 'action',
             "name": 'action',
@@ -193,4 +241,50 @@ var Get_Table_Emplyee_Work = function Get_Table_Emplyee_Work() {
         }
         return url;
     }
+}
+
+var Change_The_Amount = function Change_The_Amount(e) {
+    axios({
+        method: 'POST',
+        url: '/api/v1/change_the_amount',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: {
+            emp_code: $(e).attr('emp_code'),
+            emp_salary: $("#input_emp_salary").val()
+        }
+    })
+    .then(function (response) {
+        $('#table_employee_work').DataTable().draw();
+    })
+    .catch(function (error) {
+        console.log(error.response);
+    })
+}
+
+var Choose_A_Reduction = function Choose_A_Reduction(e) {
+    $("#modal_choose_a_reduction").modal('show');
+    $("#btn_choose_a_reduction").attr('work_id', $(e).attr('work_id'));
+}
+
+var Save_Choose_A_Reduction = function Save_Choose_A_Reduction(e) {
+    axios({
+        method: 'POST',
+        url: '/api/v1/save_choose_a_reduction',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: {
+            work_id: $(e).attr('work_id'),
+            choose_a_reduction: $("#select_choose_a_reduction").val()
+        }
+    })
+    .then(function (response) {
+        $("#modal_choose_a_reduction").modal('hide');
+        $('#table_employee_work').DataTable().draw();
+    })
+    .catch(function (error) {
+        console.log(error.response);
+    })
 }

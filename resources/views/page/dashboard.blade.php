@@ -161,6 +161,7 @@
                                                                     <tr role="row" class="text-center">
                                                                         <th>วันที่</th>
                                                                         <th>เวลาเข้างาน</th>
+                                                                        <th>เวลาออกงาน</th>
                                                                         <th>สถานะ</th>
                                                                         <th>เงินรายวัน</th>
                                                                         <th>เครื่องมือ</th>
@@ -213,7 +214,45 @@
                 </div>
             </div>
         </div>
-
+        <!-- Modeal Change The Amount -->
+        <div class="modal fade" id="modal_choose_a_reduction" tabindex="-1" role="dialog" aria-labelledby="modal-block-popin" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-popin" role="document">
+                <div class="modal-content">
+                    <div class="block block-rounded block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary">
+                            <h3 class="block-title"><i class="fas fa-exchange-alt"></i> เปลี่ยนจำนวนเงิน</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                    <i class="fa fa-fw fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="block-content font-size-sm">
+                            <div class="form-group">
+                                <select class="js-select2 form-control" id="select_choose_a_reduction" style="width: 100%;">
+                                    <option value="2">ลา</option>
+                                    <option value="3">ป่วย</option>
+                                    <option value="4">เปลี่ยนวันหยุด</option>
+                                    <option value="5">หักเงิน 75%</option>
+                                    <option value="6">หักเงิน 50%</option>
+                                    <option value="7">หักเงิน 25%</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="block-content block-content-full text-right border-top">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-sm btn-block btn-danger mr-1" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-sm btn-block btn-success" id="btn_choose_a_reduction" onclick="Save_Choose_A_Reduction(this)"><i class="fas fa-save"></i> ยืนยัน</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
     <!-- APP JS -->

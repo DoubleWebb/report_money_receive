@@ -14,7 +14,7 @@ class AuthController extends Controller
 {
     public function Login(Request $request)
     {
-        return View::make('system\login');
+        return View::make('system\dashboard.blade');
     }
 
     public function Do_Login(Request $request)

@@ -28,6 +28,10 @@ class EmployeeController extends Controller
                 employee::where('emp_code',$request->emp_code)
                     ->update(['emp_firstname' => $request->emp_firstname, 'emp_lastname' => $request->emp_lastname]);
             }
+            // อัพเวลาที่ส่งเข้ามาล่าสุด
+            team::where('team_id', $request->emp_team)
+                    ->update(['team_last_send' => Carbon::now()]);
+                    
             return response()->json([
                 'message' => 'อัพเดตข้อมูลสำเร็จ'
             ], 200);             

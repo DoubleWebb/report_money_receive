@@ -30,7 +30,7 @@ var Get_Employee = function Get_Employee() {
         var emp_row_preview = '';
         $(response.data.data_team).each(function (index, team) {
             Data  = '<div class="col-12"><div class="alert alert-primary text-center" style="width:100%" role="alert">';
-            Data += team.team_name;
+            Data += 'ทีม '+ team.team_name;
             Data += '</div></div>';
             $(response.data.data_emp).each(function (index, value) {
                 if (value.emp_team == team.team_id) {

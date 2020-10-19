@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\finger as finger;
+use App\Models\team as team;
 
 class FingerController extends Controller
 {
@@ -22,6 +23,10 @@ class FingerController extends Controller
                 $insert_finger->emp_team = $request->emp_team;
                 $insert_finger->save();            
             }
+            // อัพเวลาที่ส่งเข้ามาล่าสุด
+            team::where('team_id', $request->emp_team)
+                    ->update(['team_last_send' => Carbon::now()]);
+                    
             return response()->json([
                 'message' => 'อัพเดตข้อมูลสำเร็จ'
             ], 200);  

@@ -120,7 +120,7 @@ class DashboardController extends Controller
                     if($get_employee->emp_salary == null) {
                         $result = 'ยังไม่ได้กรอกเงินเดือน';
                     }else {
-                        $result = null;
+                        $result = 'รอการคำนวนเงิน Auto';
                     }
                 }else {
                     $result = number_format($data->work_day_money, 2).' บาท';

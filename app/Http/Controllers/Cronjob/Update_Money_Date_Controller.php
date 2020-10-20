@@ -38,6 +38,10 @@ class Update_Money_Date_Controller extends Controller
                         // ได้เงินเต็ม
                         $sum_money_days = $check_salary_emp->emp_salary / $setting_days->setting_value;
                         work::where('work_id', $row->work_id)->update(['work_day_money' => $sum_money_days]);
+                    }else if ($row->work_status == '1' AND $row->work_status_remark == '1') {
+                        // วันหยุด
+                        $sum_money_days = $check_salary_emp->emp_salary / $setting_days->setting_value;
+                        work::where('work_id', $row->work_id)->update(['work_day_money' => $sum_money_days]);
                     }else if ($row->work_status == '1' AND $row->work_status_remark == '3') {
                         // ได้เงิน 25%
                         $sum_money = $check_salary_emp->emp_salary / $setting_days->setting_value;

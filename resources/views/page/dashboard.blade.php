@@ -51,7 +51,7 @@
         @include('../component.footer')
 
         <!-- Modeal Salary -->
-        <div class="modal fade" id="modal_salary" tabindex="-1" role="dialog" aria-labelledby="modal_salary" aria-hidden="true">
+        <div class="modal fade" id="modal_salary" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="modal_salary" aria-hidden="true">
             <div class="modal-dialog modal-dialog-popin modal-xl" role="document">
                 <div class="modal-content">
                     <div class="block block-rounded block-themed block-transparent mb-0">
@@ -215,7 +215,7 @@
             </div>
         </div>
         <!-- Modeal Change The Amount -->
-        <div class="modal fade" id="modal_choose_a_reduction" tabindex="-1" role="dialog" aria-labelledby="modal-block-popin" aria-hidden="true">
+        <div class="modal fade" id="modal_choose_a_reduction" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="modal-block-popin" aria-hidden="true">
             <div class="modal-dialog modal-dialog-popin" role="document">
                 <div class="modal-content">
                     <div class="block block-rounded block-themed block-transparent mb-0">
@@ -231,11 +231,9 @@
                             <div class="form-group">
                                 <select class="js-select2 form-control" id="select_choose_a_reduction" style="width: 100%;">
                                     <option value="2">ลา</option>
-                                    <option value="3">ป่วย</option>
-                                    <option value="4">เปลี่ยนวันหยุด</option>
-                                    <option value="5">หักเงิน 75%</option>
-                                    <option value="6">หักเงิน 50%</option>
-                                    <option value="7">หักเงิน 25%</option>
+                                    <option value="3">หักเงิน 75%</option>
+                                    <option value="4">หักเงิน 50%</option>
+                                    <option value="5">หักเงิน 25%</option>
                                 </select>
                             </div>
                         </div>

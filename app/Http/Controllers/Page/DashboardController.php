@@ -62,7 +62,7 @@ class DashboardController extends Controller
         $count_not_in_work_days = work::where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)
                             ->whereMonth('date_work', Carbon::parse($request->select_month)->format('m'))
                             ->whereYear('date_work', Carbon::parse($request->select_month)->format('Y'))
-                            ->whereNull('punch_time_in')->where('work_status', '0')->count();
+                            ->where('work_status', '0')->where('work_status_remark', '0')->count();
         $count_ot_days = work::where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)
                             ->whereMonth('date_work', Carbon::parse($request->select_month)->format('m'))
                             ->whereYear('date_work', Carbon::parse($request->select_month)->format('Y'))
@@ -123,28 +123,23 @@ class DashboardController extends Controller
                         $result = null;
                     }
                 }else {
-                    $result = $data->work_day_money;
+                    $result = number_format($data->work_day_money, 2).' บาท';
                 }
                 return $result;
             })
             ->addColumn('work_text_status', function ($data) {
                 // เช็ค สถานะ แต่ล่ะวัน
                 if($data->work_status == '1' AND $data->work_status_remark == '0'){
-                    // ทำงานปกติ
                     $text_status = 'ทำงานปกติ';
                 }else if ($data->work_status == '1' AND $data->work_status_remark == '1') {
                     $text_status = 'วันหยุด ประจำ สัปดา';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '2') {
                     $text_status = 'ลา';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '3') {
-                    $text_status = 'ป่วย';
-                }else if ($data->work_status == '0' AND $data->work_status_remark == '4') {
-                    $text_status = 'เปลี่ยนวันหยุด';
-                }else if ($data->work_status == '0' AND $data->work_status_remark == '5') {
                     $text_status = 'หักเงิน 75%';
-                }else if ($data->work_status == '0' AND $data->work_status_remark == '6') {
+                }else if ($data->work_status == '0' AND $data->work_status_remark == '4') {
                     $text_status = 'หักเงิน 50%';
-                }else if ($data->work_status == '0' AND $data->work_status_remark == '7') {
+                }else if ($data->work_status == '0' AND $data->work_status_remark == '5') {
                     $text_status = 'หักเงิน 25%';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '0') {
                     $text_status = 'ขาดงาน';
@@ -157,6 +152,13 @@ class DashboardController extends Controller
             })
             ->rawColumns(['punch_time_in','punch_time_out','action'])
             ->make(true);
+    }
+
+    public function Change_The_Amount(Request $request)
+    {
+        employee::where('emp_code',$request->emp_code)->where('emp_team',$request->emp_team)->update(['emp_salary' => $request->emp_salary]);
+
+        return response()->json(['massage' => 'อัพเดตเงินเดือนสำเร็จ'], 200);
     }
 
     public function Save_Choose_A_Reduction(Request $request)

@@ -252,6 +252,7 @@ var Change_The_Amount = function Change_The_Amount(e) {
         },
         data: {
             emp_code: $(e).attr('emp_code'),
+            emp_team: $(e).attr('emp_team'),
             emp_salary: $("#input_emp_salary").val()
         }
     })

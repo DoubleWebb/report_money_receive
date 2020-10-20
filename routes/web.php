@@ -19,6 +19,8 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::get('get_table_emplyee_work', 'Page\DashboardController@Get_Table_Emplyee_Work');
     Route::post('load_empolyee_data', 'Page\DashboardController@Load_Empolyee_Data');
     Route::post('load_dashboard_data', 'Page\DashboardController@Load_Dashboard_Data');
+    Route::post('change_the_amount', 'Page\DashboardController@Change_The_Amount');
+    Route::post('save_choose_a_reduction', 'Page\DashboardController@Save_Choose_A_Reduction');
 });
 
 // Cronjob

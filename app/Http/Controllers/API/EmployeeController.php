@@ -11,7 +11,7 @@ class EmployeeController extends Controller
 {
     public function Receive_Employee(Request $request)
     {
-        if(!empty($request->emp_code) && !empty($request->emp_team) && !empty($request->emp_firstname) && !empty($request->emp_lastname)) {
+        if(!empty($request->emp_code) && !empty($request->emp_team) && !empty($request->emp_firstname)) {
             $check_employee = employee::where('emp_code', $request->emp_code)->count();
             if ($check_employee == '0') {
                 // ถ้าไม่มี พนักงาน ในระบบ

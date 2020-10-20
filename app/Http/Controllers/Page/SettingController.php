@@ -12,7 +12,7 @@ class SettingController extends Controller
 {
     public function Setting_Special_Days(Request $request)
     {
-        return view('page\setting_special_day');
+        return view('page/setting_special_day');
     }
 
     public function Get_Table_Setting_Special_Days(Request $request)

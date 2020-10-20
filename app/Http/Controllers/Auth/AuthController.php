@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function Login(Request $request)
     {
-        return view('system/login');
+        return view('auth/login');
     }
 
     public function Do_Login(Request $request)

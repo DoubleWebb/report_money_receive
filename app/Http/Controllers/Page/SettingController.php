@@ -28,6 +28,14 @@ class SettingController extends Controller
                 }
                 return $result;
             })
+            ->setRowClass(function ($data) {
+                if($data->special_day_status == '1') {
+                    $reclass =  'bg-danger text-light';
+                }else {
+                    $reclass =  'bg-success text-light';
+                }
+                return $reclass;
+            })
             ->rawColumns([])
             ->make(true);
     }

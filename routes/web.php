@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'Auth\AuthController@Login')->name('login');
 // Dashboard Page
 Route::get('dashboard', 'Page\DashboardController@Dashboard')->middleware('auth')->name('dashboard');
+// Setting Special Days Page
+Route::get('setting_special_days', 'Page\SettingController@Setting_Special_Days')->middleware('auth')->name('setting_special_days');
 
 // All API
 Route::group(['prefix' => 'api/v1'], function () {
@@ -13,7 +15,7 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('do_login', 'Auth\AuthController@Do_Login');
     Route::post('do_register', 'Auth\AuthController@Do_Register');
     Route::get('do_logout', 'Auth\AuthController@Do_Logout')->name('do_logout');
-    // Page
+    // Page Dashboard
     Route::get('get_employee_all', 'Page\DashboardController@Get_Employee_All');
     Route::post('load_select_empolyee', 'Page\DashboardController@Load_Select_Empolyee');
     Route::get('get_table_emplyee_work', 'Page\DashboardController@Get_Table_Emplyee_Work');
@@ -21,6 +23,9 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('load_dashboard_data', 'Page\DashboardController@Load_Dashboard_Data');
     Route::post('change_the_amount', 'Page\DashboardController@Change_The_Amount');
     Route::post('save_choose_a_reduction', 'Page\DashboardController@Save_Choose_A_Reduction');
+    // Page Setting
+    Route::get('get_table_setting_special_days', 'Page\SettingController@Get_Table_Setting_Special_Days');
+    Route::post('save_create_special_day', 'Page\SettingController@Save_Create_Special_Day');
 });
 
 // Cronjob

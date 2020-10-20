@@ -13,8 +13,9 @@ class team extends Model
     protected $fillable = [
         'team_name',
         'team_location',
-        'team_last_send',
-        'team_day_off'
+        'team_day_off',
+        'team_late_of_work',
+        'team_last_send'
     ];
 
     public $timestamps = false;

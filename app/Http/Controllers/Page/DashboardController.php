@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 use App\Models\employee as employee;
 use App\Models\team as team;
 use App\Models\work as work;
+use App\Models\special_day as special_day;
 
 class DashboardController extends Controller
 {
@@ -120,7 +121,13 @@ class DashboardController extends Controller
                     if($get_employee->emp_salary == null) {
                         $result = 'ยังไม่ได้กรอกเงินเดือน';
                     }else {
-                        $result = 'รอการคำนวนเงิน Auto';
+                        if ($data->work_status == '0' AND $data->work_status_remark == '0') {
+                            $result = '0 บาท';
+                        }else if ($data->work_status == '0' AND $data->work_status_remark == '2') {
+                            $result = '0 บาท';
+                        }else {
+                            $result = 'รอการคำนวนเงิน Auto';
+                        }
                     }
                 }else {
                     $result = number_format($data->work_day_money, 2).' บาท';
@@ -128,29 +135,44 @@ class DashboardController extends Controller
                 return $result;
             })
             ->addColumn('work_text_status', function ($data) {
+                $special_day_name = special_day::where('special_day_date', $data->date_work)->first();
+                $get_late_of_work = team::where('team_id', $data->emp_team)->first();
+                // OT
+                if ($data->work_bonus_status == '1') {
+                    $ot = '<i class="fas fa-splotch" style="color:green" data-toggle="tooltip" data-placement="top" title="'.$special_day_name->special_day_remark.'"></i>';
+                }else {
+                    $ot = '';
+                }
                 // เช็ค สถานะ แต่ล่ะวัน
                 if($data->work_status == '1' AND $data->work_status_remark == '0'){
-                    $text_status = 'ทำงานปกติ';
+                    $date_start = Carbon::parse($data->punch_time_in)->format($get_late_of_work->team_late_of_work);
+                    $date_end = Carbon::parse($data->punch_time_in)->format('H:i:s');
+                    $Late_for_work = Carbon::parse($date_start)->floatDiffInMinutes($date_end, false); 
+                    if($Late_for_work >= '0.1') {
+                        $text_status = '<span class="badge badge-warning">เข้าทำงานสาย</span>';
+                    }else {
+                        $text_status = '<span class="badge badge-success">เข้าทำงาน</span>';
+                    }
                 }else if ($data->work_status == '1' AND $data->work_status_remark == '1') {
-                    $text_status = 'วันหยุด ประจำ สัปดา';
+                    $text_status = '<span class="badge badge-primary">วันหยุด ประจำ สัปดา</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '2') {
-                    $text_status = 'ลา';
+                    $text_status = '<span class="badge badge-secondary">ลา</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '3') {
-                    $text_status = 'หักเงิน 75%';
+                    $text_status = '<span class="badge badge-warning">หักเงิน 75%</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '4') {
-                    $text_status = 'หักเงิน 50%';
+                    $text_status = '<span class="badge badge-warning">หักเงิน 50%</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '5') {
-                    $text_status = 'หักเงิน 25%';
+                    $text_status = '<span class="badge badge-warning">หักเงิน 25%</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '0') {
-                    $text_status = 'ขาดงาน';
+                    $text_status = '<span class="badge badge-danger">ขาดงาน</span>';
                 }
 
-                return $text_status;
+                return $ot.' '.$text_status;
             })
             ->addColumn('action', function ($data) {
                 return '<button class="btn btn-sm btn-primary" work_id="'.$data->work_id. '" onclick="Choose_A_Reduction(this)"><i class="fas fa-exchange-alt"></i> เปลี่ยนจำนวนเงิน</button>';
             })
-            ->rawColumns(['punch_time_in','punch_time_out','action'])
+            ->rawColumns(['work_text_status','action'])
             ->make(true);
     }
 

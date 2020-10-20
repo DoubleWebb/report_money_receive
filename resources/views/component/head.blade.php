@@ -25,6 +25,12 @@
                         <i class="nav-main-link-icon si si-speedometer"></i>
                         <span class="nav-main-link-name">Dashboard</span>
                     </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link @php if(collect(request()->segments())->last() == 'setting_special_days') { echo 'active'; }  @endphp" href="{{ route('setting_special_days') }}">
+                        <i class="nav-main-link-icon si si-speedometer"></i>
+                        <span class="nav-main-link-name">Setting Special Days</span>
+                    </a>
                 </li>           
             </ul>
         </div>

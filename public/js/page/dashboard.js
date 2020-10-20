@@ -76,6 +76,7 @@ var Get_Employee = function Get_Employee() {
 }
 
 var Open_Modl_Salary = function Open_Modl_Salary(e) {
+    var Toast = Set_Toast();
     var emp_code = $(e).attr('emp_code');
     var emp_team = $(e).attr('emp_team');
     $("#modal_salary").modal('show');
@@ -247,6 +248,7 @@ var Get_Table_Emplyee_Work = function Get_Table_Emplyee_Work() {
 }
 
 var Change_The_Amount = function Change_The_Amount(e) {
+    var Toast = Set_Toast();
     axios({
         method: 'POST',
         url: '/api/v1/change_the_amount',
@@ -273,6 +275,7 @@ var Choose_A_Reduction = function Choose_A_Reduction(e) {
 }
 
 var Save_Choose_A_Reduction = function Save_Choose_A_Reduction(e) {
+    var Toast = Set_Toast();
     axios({
         method: 'POST',
         url: '/api/v1/save_choose_a_reduction',
@@ -291,4 +294,40 @@ var Save_Choose_A_Reduction = function Save_Choose_A_Reduction(e) {
     .catch(function (error) {
         console.log(error.response);
     })
+}
+
+var Check_null_input = function Check_null_input(Array_id) {
+    var success_rows = 0;
+    var error_rows = 0;
+
+    $(Array_id).each(function (index, value) {
+        function Check_null_Input() {
+            if ($("#" + value).val() == '') {
+                $("#" + value).removeClass('is-valid').addClass('is-invalid');
+                return false;
+            } else {
+                $("#" + value).removeClass('is-invalid').addClass('is-valid');
+                return true;
+            }
+        }
+        var Check_null_Input = Check_null_Input() == true ? success_rows++ : error_rows++;
+    });
+    var result = success_rows == Array_id.length ? true : false;
+    return result;
+}
+
+var Set_Toast = function Set_Toast() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    return Toast
 }

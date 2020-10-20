@@ -1,19 +1,46 @@
 <?php
 
-namespace App\Http\Controllers\Cronjob;
+namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\finger as finger;
 use App\Models\work as work;
 use App\Models\employee as employee;
 
-class Update_Date_Controller extends Controller
+class Update_Date extends Command
 {
-    public function Update_Date_Work(Request $request)
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'update_date';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        // ดึงข้อมูลวันล่าสุด เพื่อค้นหาว่ามีข้อมูลมาหรือยัง
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
         $get_work = work::whereDate('date_work', Carbon::now()->format('Y-m-d'))->get();
         foreach ($get_work as $key => $row) {
             $check_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->count();
@@ -41,7 +68,5 @@ class Update_Date_Controller extends Controller
                         ->update(['emp_work_last' => $data_finger->punch_time]);
             }
         }
-
-        return response()->json(['massage' => 'อัพเดตข้อมูล ประจำวันสำเร็จ'], 200);
     }
 }

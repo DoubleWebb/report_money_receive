@@ -1,19 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Cronjob;
+namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\employee as employee;
 use App\Models\work as work;
 use App\Models\setting as setting;
 
-class Update_Money_Date_Controller extends Controller
+class Update_Money_Date extends Command
 {
-    public function Update_Money_Work(Request $request)
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'update_money_date';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        // ข้อมูล ทั้งเดือน
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
         $check_work = work::whereMonth('date_work', Carbon::now()->format('m'))
                             ->whereYear('date_work', Carbon::now()->format('Y'))->get();       
         foreach ($check_work as $key => $row) {

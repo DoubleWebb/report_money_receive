@@ -41,13 +41,15 @@ var Get_Employee = function Get_Employee() {
             Data += 'ทีม '+ team.team_name;
             Data += '</div></div>';
             $(response.data.data_emp).each(function (index, value) {
+                var emp_firstname = value.emp_firstname != null ? value.emp_firstname : '';
+                var emp_lastname = value.emp_lastname != null ? value.emp_lastname : '';
                 if (value.emp_team == team.team_id) {
                     Data += '<div class="col-sm-6 col-xl-3">'
                     Data += '<div class="block block-rounded d-flex flex-column">'
                     Data += '<div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">'
                     Data += '<dl class="mb-0">'
                     Data += '<dt class="text-muted mb-0">ล่าสุด : <span class="text-success">' + moment(value.emp_work_last).format('HH:mm:ss DD/MM/YYYY') + '</span></dt>'
-                    Data += '<dd class="text-muted mb-0">' + value.emp_firstname + ' ' + value.emp_lastname + '</dd>'
+                    Data += '<dd class="text-muted mb-0">' + emp_firstname + ' ' + emp_lastname + '</dd>'
                     Data += '</dl>'
                     Data += '<div class="item item-rounded bg-body">'
                     Data += '<i class="fas fa-users font-size-h3 text-primary"></i>'
@@ -77,7 +79,9 @@ var Open_Modl_Salary = function Open_Modl_Salary(e) {
     var emp_code = $(e).attr('emp_code');
     var emp_team = $(e).attr('emp_team');
     $("#modal_salary").modal('show');
-    $("#modal_salary_name_preview").html($(e).attr('firstname') + ' ' + $(e).attr('lastname'));
+    var firstname = $(e).attr('firstname') != null ? $(e).attr('firstname') : '';
+    var lastname = $(e).attr('lastname') != null ? $(e).attr('lastname') : '';
+    $("#modal_salary_name_preview").html(firstname + ' ' + lastname);
     
     // เปิดการโหลดข้อมูลสำหรับการแสดง
     Load_Empolyee_Data(emp_code, emp_team);
@@ -165,7 +169,6 @@ var Load_Dashboard_Data = function Load_Dashboard_Data(emp_code, emp_team, selec
         $("#show_block_2").html(response.data.data.block_2);
         $("#show_block_3").html(response.data.data.block_3);
         $("#show_block_4").html(response.data.data.block_4);
-        console.log(response);
     })
     .catch(function (error) {
         console.log(error.response);

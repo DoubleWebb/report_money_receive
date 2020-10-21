@@ -64,7 +64,7 @@ $('#setting_special_day_table').DataTable({
         "regex": true
     },
     "order": [
-        [0, "desc"]
+        [2, "asc"]
     ]
 });
 

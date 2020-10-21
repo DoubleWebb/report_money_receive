@@ -9,6 +9,7 @@ use App\Models\employee as employee;
 use App\Models\team as team;
 use App\Models\work as work;
 use App\Models\special_day as special_day;
+use App\Models\holiday as holiday;
 
 class Create_Date extends Command
 {
@@ -72,23 +73,65 @@ class Create_Date extends Command
                     }
                     $insert_day_off->save();
                 }else {
-                    // วันทำงานปกติ
-                    $insert_day_work = new work;
-                    $insert_day_work->date_work = Carbon::now()->format('Y-m-d');
-                    $insert_day_work->date_name = Carbon::now()->isoFormat('dddd');
-                    $insert_day_work->work_status = '0';
-                    $insert_day_work->work_status_remark = '0';
-                    $insert_day_work->emp_code = $row->emp_code;
-                    $insert_day_work->emp_team = $row->emp_team;
-                    if ($special_day_count == '1') {
-                        // ถ้ามีวันหยุด พิเศษ
-                        $insert_day_work->work_bonus_status = '1';
-                        $insert_day_work->work_bonus_remark = $special_day_data->special_day_remark;
-                        special_day::where('special_day_id', $special_day_data->special_day_id)->update(['special_day_status' => '0']);
-                    } else {
-                        $insert_day_work->work_bonus_status = '0';
+                    $check_holiday = holiday::where('emp_code', $row->emp_code)->where('emp_team', $row->emp_team)
+                                            ->whereDate('holiday_date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('holiday_date_end', '>=', Carbon::now()->format('Y-m-d'))
+                                            ->count();
+                    // ถ้ามี ลาล่วงหน้า                  
+                    if($check_holiday == '1') {
+                        // ข้อมูล Holiday
+                        $holiday = holiday::where('emp_code', $row->emp_code)->where('emp_team', $row->emp_team)
+                                            ->whereDate('holiday_date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('holiday_date_end', '>=', Carbon::now()->format('Y-m-d'))
+                                            ->first();
+                        // อัพเดต ว่ากำลังเพิ่มวันให้
+                        $update_holiday = holiday::find($holiday->holiday_id);
+                        $update_holiday->holiday_status = '1';
+                        $update_holiday->save();                                            
+                        // วันทำงานปกติ    
+                        $insert_day_work = new work;
+                        $insert_day_work->date_work = Carbon::now()->format('Y-m-d');
+                        $insert_day_work->date_name = Carbon::now()->isoFormat('dddd');
+                        $insert_day_work->work_status = '1';
+                        $insert_day_work->work_status_remark = '2';
+                        $insert_day_work->emp_code = $row->emp_code;
+                        $insert_day_work->emp_team = $row->emp_team;
+                        if ($special_day_count == '1') {
+                            // ถ้ามีวันหยุด พิเศษ
+                            $insert_day_work->work_bonus_status = '1';
+                            $insert_day_work->work_bonus_remark = $special_day_data->special_day_remark;
+                            special_day::where('special_day_id', $special_day_data->special_day_id)->update(['special_day_status' => '0']);
+                        } else {
+                            $insert_day_work->work_bonus_status = '0';
+                        }
+                        $insert_day_work->save();                        
+                    }else{
+                        // เช็คว่าถ้าหมดวันลาล่วงหน้าให้เปลี่ยน status
+                        $holiday = holiday::where('emp_code', $row->emp_code)->where('emp_team', $row->emp_team)->where('holiday_status', '1')
+                                                ->whereDate('holiday_date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('holiday_date_end', '>=', Carbon::now()->format('Y-m-d'))
+                                                ->first();
+                        if (!empty($holiday)) {
+                            // อัพเดต ว่าสิ้นสุด
+                            $update_holiday = holiday::find($holiday->holiday_id);
+                            $update_holiday->holiday_status = '2';
+                            $update_holiday->save(); 
+                        }
+                        // วันทำงานปกติ    
+                        $insert_day_work = new work;
+                        $insert_day_work->date_work = Carbon::now()->format('Y-m-d');
+                        $insert_day_work->date_name = Carbon::now()->isoFormat('dddd');
+                        $insert_day_work->work_status = '0';
+                        $insert_day_work->work_status_remark = '0';
+                        $insert_day_work->emp_code = $row->emp_code;
+                        $insert_day_work->emp_team = $row->emp_team;
+                        if ($special_day_count == '1') {
+                            // ถ้ามีวันหยุด พิเศษ
+                            $insert_day_work->work_bonus_status = '1';
+                            $insert_day_work->work_bonus_remark = $special_day_data->special_day_remark;
+                            special_day::where('special_day_id', $special_day_data->special_day_id)->update(['special_day_status' => '0']);
+                        } else {
+                            $insert_day_work->work_bonus_status = '0';
+                        }
+                        $insert_day_work->save();
                     }
-                    $insert_day_work->save();
                 }
             }
         }

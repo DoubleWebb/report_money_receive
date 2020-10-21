@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 use App\Models\employee as employee;
 use App\Models\team as team;
 use App\Models\work as work;
+use App\Models\holiday as holiday;
 use App\Models\special_day as special_day;
 
 class DashboardController extends Controller
@@ -85,7 +86,7 @@ class DashboardController extends Controller
             'block_4' => $block_4
         );
 
-        return response()->json(['massage' => 'ดึงข้อมูลสำเร็จ', 'data' => $data], 200);
+        return response()->json(['message' => 'ดึงข้อมูลสำเร็จ', 'data' => $data], 200);
     }
 
     public function Get_Table_Emplyee_Work(Request $request)
@@ -119,17 +120,22 @@ class DashboardController extends Controller
                 $get_employee = employee::where('emp_code', $data->emp_code)->where('emp_team', $data->emp_team)->first();
                 if ($data->work_day_money == null OR $data->work_day_money == '0') {
                     if($get_employee->emp_salary == null) {
+                        // ยังไม่ได้กรอกเงินเดือน
                         $result = 'ยังไม่ได้กรอกเงินเดือน';
                     }else {
                         if ($data->work_status == '0' AND $data->work_status_remark == '0') {
+                            // ขาดงาน
                             $result = '0 บาท';
-                        }else if ($data->work_status == '0' AND $data->work_status_remark == '2') {
+                        }else if ($data->work_status == '0' AND $data->work_status_remark == '3') {
+                            // ลา ไม่ได้เงิน
                             $result = '0 บาท';
                         }else {
+                            // อื่นๆ
                             $result = 'รอการคำนวนเงิน Auto';
                         }
                     }
                 }else {
+                    // มีจำนวนเงินแล้ว
                     $result = number_format($data->work_day_money, 2).' บาท';
                 }
                 return $result;
@@ -155,16 +161,20 @@ class DashboardController extends Controller
                     }
                 }else if ($data->work_status == '1' AND $data->work_status_remark == '1') {
                     $text_status = '<span class="badge badge-primary">วันหยุด ประจำ สัปดา</span>';
-                }else if ($data->work_status == '0' AND $data->work_status_remark == '2') {
-                    $text_status = '<span class="badge badge-secondary">ลา</span>';
+                }else if ($data->work_status == '1' AND $data->work_status_remark == '2') {
+                    $text_status = '<span class="badge badge-secondary">วันหยุดล่วงหน้า</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '3') {
-                    $text_status = '<span class="badge badge-warning">หักเงิน 75%</span>';
+                    $text_status = '<span class="badge badge-secondary">ลา</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '4') {
-                    $text_status = '<span class="badge badge-warning">หักเงิน 50%</span>';
+                    $text_status = '<span class="badge badge-warning">หักเงิน 75%</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '5') {
+                    $text_status = '<span class="badge badge-warning">หักเงิน 50%</span>';
+                }else if ($data->work_status == '0' AND $data->work_status_remark == '6') {
                     $text_status = '<span class="badge badge-warning">หักเงิน 25%</span>';
                 }else if ($data->work_status == '0' AND $data->work_status_remark == '0') {
                     $text_status = '<span class="badge badge-danger">ขาดงาน</span>';
+                }else {
+                    $text_status = 'Error ยังไม่ได้ทำ';
                 }
 
                 return $ot.' '.$text_status;
@@ -180,13 +190,52 @@ class DashboardController extends Controller
     {
         employee::where('emp_code',$request->emp_code)->where('emp_team',$request->emp_team)->update(['emp_salary' => $request->emp_salary]);
 
-        return response()->json(['massage' => 'อัพเดตเงินเดือนสำเร็จ'], 200);
+        return response()->json(['message' => 'อัพเดตเงินเดือนสำเร็จ'], 200);
     }
 
     public function Save_Choose_A_Reduction(Request $request)
     {
         work::where('work_id', $request->work_id)->update(['work_status_remark' => $request->choose_a_reduction]);
 
-        return response()->json(['massage' => 'อัพเดตสำเร็จ รอ คำนวนเงิน Auto'], 200);
+        return response()->json(['message' => 'อัพเดตสำเร็จ รอ คำนวนเงิน Auto'], 200);
+    }
+
+    public function Get_Table_Holiday_In_Advance(Request $request)
+    {
+        $data = holiday::where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)->orderBy('holiday_id', 'desc')->get();
+        return Datatables::of($data)
+            ->editColumn('holiday_status', function($data) {
+                if ($data->holiday_status == '0') {
+                    $status = '<span class="badge badge-secondary">รอสร้าง</span>';
+                }else if ($data->holiday_status == '1') {
+                    $status = '<span class="badge badge-primary">กำลังดำเนินการ</span>';
+                }else if ($data->holiday_status == '2') {
+                    $status = '<span class="badge badge-success">สร้างเสร็จสิ้น</span>';
+                }
+                return $status;
+            })
+            ->addColumn('date_start_and_end', function ($data) {
+                return Carbon::createFromFormat('Y-m-d', $data->holiday_date_start)->format('d/m/Y').' ถึง '.Carbon::createFromFormat('Y-m-d', $data->holiday_date_end)->format('d/m/Y');
+            })
+            ->rawColumns(['holiday_status'])
+            ->make(true);
+    }
+
+    public function Save_Holiday_In_Advance(Request $request)
+    {
+        $array_Date = explode(" ",$request->holiday_date);
+        $date_start = $array_Date[0];
+        $date_end   = $array_Date[2];
+        // insert_holiday
+        $insert_holiday = new holiday;
+        $insert_holiday->holiday_date_start = $date_start;
+        $insert_holiday->holiday_date_end =$date_end;
+        $insert_holiday->holiday_remark = $request->holiday_remark;
+        $insert_holiday->holiday_status = '0';
+        $insert_holiday->emp_code = $request->emp_code;
+        $insert_holiday->emp_team = $request->emp_team;
+        $insert_holiday->save();
+
+        return response()->json(['message' => 'เพิ่มข้อมูล ลาล่วงหน้า สำเร็จ'], 200);
     }
 }

@@ -27,11 +27,25 @@
                     </a>
                 </li>
                 <li class="nav-main-item">
+                    <a class="nav-main-link @php if(collect(request()->segments())->last() == 'setting_team') { echo 'active'; }  @endphp" href="{{ route('setting_team') }}">
+                        <i class="nav-main-link-icon fas fa-cogs"></i>
+                        <span class="nav-main-link-name">Setting Team</span>
+                    </a>
+                </li>
+                <li class="nav-main-item">
                     <a class="nav-main-link @php if(collect(request()->segments())->last() == 'setting_special_days') { echo 'active'; }  @endphp" href="{{ route('setting_special_days') }}">
-                        <i class="nav-main-link-icon si si-speedometer"></i>
+                        <i class="nav-main-link-icon fas fa-robot"></i>
                         <span class="nav-main-link-name">Setting Special Days</span>
                     </a>
-                </li>           
+                </li>     
+                @if (Auth::user()->type == 'admin')
+                <li class="nav-main-item">
+                    <a class="nav-main-link @php if(collect(request()->segments())->last() == 'setting_user') { echo 'active'; }  @endphp" href="{{ route('setting_user') }}">
+                        <i class="nav-main-link-icon fas fa-users"></i>
+                        <span class="nav-main-link-name">Setting User</span>
+                    </a>
+                </li> 
+                @endif      
             </ul>
         </div>
     </div>
@@ -56,7 +70,7 @@
                 <div class="dropdown-menu dropdown-menu-md dropdown-menu-right p-0 border-0" aria-labelledby="page-header-user-dropdown">
                     <div class="p-2">
                         <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('do_logout') }}">
-                            <span class="font-size-sm font-w500">ออกจากระบบ</span>
+                            <span class="font-size-sm font-w500"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</span>
                         </a>
                     </div>
                 </div>

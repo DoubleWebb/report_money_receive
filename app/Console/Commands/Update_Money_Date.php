@@ -42,6 +42,7 @@ class Update_Money_Date extends Command
      */
     public function handle()
     {
+        // ข้อมูล ทั้งเดือน
         $check_work = work::whereMonth('date_work', Carbon::now()->format('m'))
                             ->whereYear('date_work', Carbon::now()->format('Y'))->get();       
         foreach ($check_work as $key => $row) {
@@ -70,17 +71,21 @@ class Update_Money_Date extends Command
                         // วันหยุด
                         $sum_money_days = $check_salary_emp->emp_salary / $setting_days->setting_value;
                         work::where('work_id', $row->work_id)->update(['work_day_money' => $sum_money_days]);
-                    }else if ($row->work_status == '1' AND $row->work_status_remark == '3') {
+                    }else if ($row->work_status == '1' AND $row->work_status_remark == '2') {
+                        // วันหยุดล่วงหน้า
+                        $sum_money_days = $check_salary_emp->emp_salary / $setting_days->setting_value;
+                        work::where('work_id', $row->work_id)->update(['work_day_money' => $sum_money_days]);
+                    }else if ($row->work_status == '1' AND $row->work_status_remark == '4') {
                         // ได้เงิน 25%
                         $sum_money = $check_salary_emp->emp_salary / $setting_days->setting_value;
                         $sum_money_days = $sum_money / 100 * 25;
                         work::where('work_id', $row->work_id)->update(['work_day_money' => $sum_money_days]);
-                    }else if ($row->work_status == '1' AND $row->work_status_remark == '4') {
+                    }else if ($row->work_status == '1' AND $row->work_status_remark == '5') {
                         // ได้เงิน 50%
                         $sum_money = $check_salary_emp->emp_salary / $setting_days->setting_value;
                         $sum_money_days = $sum_money / 100 * 50;
                         work::where('work_id', $row->work_id)->update(['work_day_money' => $sum_money_days]);
-                    }else if ($row->work_status == '1' AND $row->work_status_remark == '5') {
+                    }else if ($row->work_status == '1' AND $row->work_status_remark == '6') {
                         // ได้เงิน 75%
                         $sum_money = $check_salary_emp->emp_salary / $setting_days->setting_value;
                         $sum_money_days = $sum_money / 100 * 75;

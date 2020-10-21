@@ -1,11 +1,16 @@
 $(document).ready(function () {
     // ใช้งาน Select ผ่าน Theme Page ได้เลย
-    One.helpers(['select2']);
+    One.helpers(['select2', 'flatpickr']);
     $("#dashboard_date_today").html(moment().format('DD/MM/YYYY'));
+
+    $(".js-flatpickr").flatpickr({
+        "locale": "th"
+    });
     // ใช้งาน ฟังชั่น
     Get_Employee();
     // Table
     Get_Table_Emplyee_Work();
+    Get_Table_Holiday_In_Advance();
 
     // ตั้งค่า Modal ซ้อนกันได้
     $(document).on('show.bs.modal', '.modal', function (event) {
@@ -37,9 +42,9 @@ var Get_Employee = function Get_Employee() {
         var Data;
         var emp_row_preview = '';
         $(response.data.data_team).each(function (index, team) {
-            Data  = '<div class="col-12"><div class="alert alert-primary text-center" style="width:100%" role="alert">';
+            Data  = '<div class="col-12"><div class="alert alert-primary text-center" style="width:100%" role="alert"><b>';
             Data += 'ทีม '+ team.team_name;
-            Data += '</div></div>';
+            Data += '</b></div></div>';
             $(response.data.data_emp).each(function (index, value) {
                 var emp_firstname = value.emp_firstname != null ? value.emp_firstname : '';
                 var emp_lastname = value.emp_lastname != null ? value.emp_lastname : '';
@@ -89,7 +94,9 @@ var Open_Modl_Salary = function Open_Modl_Salary(e) {
     // โหลดข้อมูล พนักงาน
     Load_Select_Empolyee(emp_code, emp_team);
     // โหลด Dashboard โดยรวม
-    Load_Dashboard_Data(emp_code, emp_team,$("#select_modal_salary_tab_1").val());
+    Load_Dashboard_Data(emp_code, emp_team, $("#select_modal_salary_tab_1").val());
+    // โหลด ข้อมูลการลาล่วงหน้า
+    Load_Holiday_In_Advance(emp_code, emp_team);
 
     $('#modal_salary').on('hidden.bs.modal', function (e) {
         $("#modal_salary_name_preview").html('');
@@ -174,6 +181,76 @@ var Load_Dashboard_Data = function Load_Dashboard_Data(emp_code, emp_team, selec
     .catch(function (error) {
         console.log(error.response);
     })
+}
+
+var Load_Holiday_In_Advance = function Load_Holiday_In_Advance(emp_code, emp_team) {
+    // ตั้งค่า Emp
+    $("#btn_holiday_in_advance").attr('emp_code', emp_code);
+    $("#btn_holiday_in_advance").attr('emp_team', emp_team);
+
+    $('#table_holiday_in_advance').DataTable().ajax.url('/api/v1/get_table_holiday_in_advance?emp_code=' + emp_code + '&emp_team=' + emp_team).load();
+}
+
+var Get_Table_Holiday_In_Advance = function Get_Table_Holiday_In_Advance() {
+    // Talbe 
+    $('#table_holiday_in_advance').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "aLengthMenu": [
+            [10, 25, -1],
+            ["10", "25", "ทั้งหมด"]
+        ],
+        "ajax": {
+            "url": '/api/v1/get_table_holiday_in_advance?emp_pin=0&emp_team=0',
+            "type": 'GET',
+            "async": true,
+            error: function (xhr, error, code) {
+                $('#table_holiday_in_advance').DataTable().draw();
+            }
+        },
+        "columns": [{
+            "data": 'date_start_and_end',
+            "name": 'date_start_and_end',
+        }, {
+            "data": 'holiday_remark',
+            "name": 'holiday_remark',
+        }, {
+            "data": 'holiday_status',
+            "name": 'holiday_status',
+        }],
+        "columnDefs": [{
+                "className": 'text-left',
+                "targets": []
+            },
+            {
+                "className": 'text-center',
+                "targets": [0, 2]
+            },
+            {
+                "className": 'text-right',
+                "targets": []
+            },
+        ],
+        "language": {
+            "url": Get_lang_data_table()
+        },
+        "search": {
+            "regex": true
+        },
+        "order": [
+            [0, "desc"]
+        ]
+    });
+
+    function Get_lang_data_table() {
+        var lang = $('html').attr('lang');
+        if (lang == 'th') {
+            var url = "//cdn.datatables.net/plug-ins/1.10.13/i18n/Thai.json";
+        } else {
+            var url = "//cdn.datatables.net/plug-ins/1.10.13/i18n/English.json";
+        }
+        return url;
+    }
 }
 
 var Get_Table_Emplyee_Work = function Get_Table_Emplyee_Work() {
@@ -294,6 +371,53 @@ var Save_Choose_A_Reduction = function Save_Choose_A_Reduction(e) {
     .catch(function (error) {
         console.log(error.response);
     })
+}
+
+var Open_Holiday_In_Advance = function Open_Holiday_In_Advance() {
+    $("#modal_holiday_in_advance").modal('show');
+
+    $('#modal_holiday_in_advance').on('hidden.bs.modal', function (e) {
+        $("#holiday_in_advance_date").removeClass('is-valid').removeClass('is-invalid').val('');
+        $("#holiday_in_advance_remark").removeClass('is-valid').removeClass('is-invalid').val('');
+    })
+}
+
+var Save_Holiday_In_Advance = function Save_Holiday_In_Advance(e) {
+    var Toast = Set_Toast();
+    var Array_id = [
+        'holiday_in_advance_date',
+        'holiday_in_advance_remark'
+    ];
+    var Check_input = Check_null_input(Array_id);
+    if (Check_input == true) {
+        axios({
+            method: 'POST',
+            url: '/api/v1/save_holiday_in_advance',
+            data: {
+                emp_code: $(e).attr('emp_code'),
+                emp_team: $(e).attr('emp_team'),
+                holiday_date: $("#holiday_in_advance_date").val(),
+                holiday_remark: $("#holiday_in_advance_remark").val()
+            }
+        })
+        .then(function (response) {
+            $("#modal_holiday_in_advance").modal('hide');
+            $('#table_holiday_in_advance').DataTable().draw();
+            Toast.fire({
+                icon: 'success',
+                title: response.data.message
+            })
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    } else {
+        Toast.fire({
+            icon: 'error',
+            title: 'ข้อมูลยังไม่ครบ'
+        })
+    }
+    console.log($("#holiday_in_advance_date").val());
 }
 
 var Check_null_input = function Check_null_input(Array_id) {

@@ -35,6 +35,7 @@ Route::group(['prefix' => 'api/v1'], function () {
     // Page Setting Team
     Route::post('get_card_setting_team', 'Page\SettingController@Get_Card_Setting_Team');
     Route::post('save_setting_team', 'Page\SettingController@Save_Setting_Team');
+    Route::post('save_create_team', 'Page\SettingController@Save_Create_Team');
     // Page Setting User
     Route::get('get_table_setting_user', 'Page\SettingController@Get_Table_Setting_User');
     Route::get('get_select_team', 'Page\SettingController@Get_Select_Team');

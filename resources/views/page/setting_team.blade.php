@@ -34,6 +34,7 @@
                     <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                         <h1 class="flex-sm-fill h3 my-2">
                             วันที่ <span id="setting_team_date_today"></span>
+                            <button class="btn btn-sm btn-success" style="margin-left:5px;" onclick="Open_Create_Team()"><i class="fas fa-plus"></i> เพิ่ม Team</button>
                         </h1>
                         <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
                             <ol class="breadcrumb breadcrumb-alt">
@@ -47,6 +48,64 @@
             <div class="content">
                 <!-- Overview -->
                 <div class="row row-deck" id="show_setting_team">
+                </div>
+            </div>
+
+            <!-- Modal_Create_User -->
+            <div class="modal fade" id="modal_create_team" tabindex="-1" role="dialog" aria-labelledby="modal-block-popin" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-popin" role="document">
+                    <div class="modal-content">
+                        <div class="block block-rounded block-themed block-transparent mb-0">
+                            <div class="block-header bg-success">
+                                <h3 class="block-title"><i class="fas fa-plus"></i> เพิ่ม Team</h3>
+                                <div class="block-options">
+                                    <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                        <i class="fa fa-fw fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="block-content font-size-sm">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="create_team_name">ชื่อ ทีม</label>
+                                            <input type="text" class="form-control" id="create_team_name" placeholder="ชื่อ ทีม">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="create_team_location">สถานที่</label>
+                                            <input type="text" class="form-control" id="create_team_location" placeholder="สถานที่">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="create_team_day_off">วันหยุด</label>
+                                            <select class="js-select2 form-control" id="create_team_day_off" style="width: 100%;" data-placeholder="เลือกวันหยุด" multiple>
+                                                <option value="0">วันอาทิตย์</option>
+                                                <option value="1">วันจันทร์</option>
+                                                <option value="2">วันอังคาร</option>
+                                                <option value="3">วันพุธ</option>
+                                                <option value="4">วันพฤหัสบดี</option>
+                                                <option value="5">วันศุกร์</option>
+                                                <option value="6">วันเสาร์</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="create_team_late_of_work">เวลามาสาย</label>
+                                            <input type="text" class="js-flatpickr form-control bg-white" id="create_team_late_of_work" data-enable-time="true" data-no-calendar="true" data-date-format="H:i" data-time_24hr="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-content block-content-full text-right border-top">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ปิด</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-primary" onclick="Save_Create_Team()"><i class="fas fa-save"></i> บันทึก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

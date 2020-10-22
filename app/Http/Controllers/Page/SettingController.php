@@ -72,13 +72,27 @@ class SettingController extends Controller
     {
         $update_team = team::find($request->team_id);
         $update_team->team_name = $request->team_name;
-        $update_team->team_location = $request->tean_location;
+        $update_team->team_location = $request->team_location;
         $update_team->team_day_off = implode(',', $request->team_day_off);
         $update_team->team_late_of_work = $request->team_late_of_work;
         $update_team->save();
 
         return response()->json([
             'message' => 'อัพเดต ข้อมูลทีม สำเร็จ'
+        ], 200);  
+    }
+
+    public function Save_Create_Team(Request $request)
+    {
+        $insert_team = new team;
+        $insert_team->team_name = $request->team_name;
+        $insert_team->team_location = $request->team_location;
+        $insert_team->team_day_off = implode(',', $request->team_day_off);
+        $insert_team->team_late_of_work = $request->team_late_of_work;
+        $insert_team->save();
+
+        return response()->json([
+            'message' => 'สร้าง ข้อมูลทีม สำเร็จ'
         ], 200);  
     }
 

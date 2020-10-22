@@ -102,7 +102,7 @@ var Save_Team = function Save_Team(e) {
         data: {
             team_id: $(e).attr('save_team_id'),
             team_name: $("#team_name_" + $(e).attr('save_team_id')).val(),
-            tean_location: $("#tean_location_" + $(e).attr('save_team_id')).val(),
+            team_location: $("#tean_location_" + $(e).attr('save_team_id')).val(),
             team_day_off: $("#team_day_off_" + $(e).attr('save_team_id')).val(),
             team_late_of_work: $("#team_late_of_work_" + $(e).attr('save_team_id')).val(),
         }
@@ -116,6 +116,55 @@ var Save_Team = function Save_Team(e) {
     .catch(function (error) {
         console.log(error.response);
     })
+}
+
+var Open_Create_Team = function Open_Create_Team() {
+    $("#modal_create_team").modal('show');
+
+    $('#modal_create_team').on('hidden.bs.modal', function (e) {
+        $("#create_team_name").removeClass('is-valid').removeClass('is-invalid').val('');
+        $("#create_team_location").removeClass('is-valid').removeClass('is-invalid').val('');
+        $("#create_team_day_off").removeClass('is-valid').removeClass('is-invalid').val('');
+        $("#create_team_late_of_work").removeClass('is-valid').removeClass('is-invalid').val('');
+    })
+}
+
+var Save_Create_Team = function Save_Create_Team() {
+    var Toast = Set_Toast();
+    var Array_id = [
+        'create_team_name',
+        'create_team_late_of_work'
+    ];
+    var Check_input = Check_null_input(Array_id);
+    if (Check_input == true) {
+        axios({
+            method: 'POST',
+            url: '/api/v1/save_create_team',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: {
+                team_name: $("#create_team_name").val(),
+                team_location: $("#create_team_location").val(),
+                team_day_off: $("#create_team_day_off").val(),
+                team_late_of_work: $("#create_team_late_of_work").val()
+            }
+        })
+        .then(function (response) {
+            Toast.fire({
+                icon: 'success',
+                title: response.data.message
+            })
+        })
+        .catch(function (error) {
+            console.log(error.response);
+        })
+    } else {
+        Toast.fire({
+            icon: 'error',
+            title: 'ข้อมูลยังไม่ครบ'
+        })
+    }
 }
 
 var Check_null_input = function Check_null_input(Array_id) {

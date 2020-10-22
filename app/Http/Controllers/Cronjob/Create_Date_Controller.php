@@ -44,7 +44,7 @@ class Create_Date_Controller extends Controller
                     }
                     $insert_day_off->save();
                 }else {
-                    $check_holiday = holiday::where('emp_code', $row->emp_code)->where('emp_team', $row->emp_team)
+                    $check_holiday = holiday::where('emp_code', $row->emp_code)->where('emp_team', $row->emp_team)->where('holiday_status', '0')
                                             ->whereDate('holiday_date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('holiday_date_end', '>=', Carbon::now()->format('Y-m-d'))
                                             ->count();
                     // ถ้ามี ลาล่วงหน้า                  

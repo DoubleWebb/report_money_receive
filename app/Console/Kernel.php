@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\setting_work',
         'App\Console\Commands\update_date',
         'App\Console\Commands\update_money_date',
+        'App\Console\Commands\snapshot_month',
     ];
 
     /**
@@ -33,6 +34,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('setting_work')->everyMinute();
         $schedule->command('update_date')->everyMinute();
         $schedule->command('update_money_date')->everyMinute();
+        $schedule->command('snapshot_month')->everyMinute();
     }
 
     /**

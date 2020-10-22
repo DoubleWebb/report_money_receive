@@ -50,6 +50,7 @@ Route::group(['prefix' => 'api/cronjob'], function () {
     Route::get('update_date_work', 'Cronjob\Update_Date_Controller@Update_Date_Work');
     Route::get('create_special_day', 'Cronjob\Create_Special_Day_Controller@Create_Special_Day');
     Route::get('update_money_work', 'Cronjob\Update_Money_Date_Controller@Update_Money_Work');
+    Route::get('snapshot_month', 'Cronjob\Snapshot_Controller@SnapShot_Month');
     // Mannal
     Route::get('create_date_work_mannal', 'Cronjob\Create_Date_Controller@Create_Date_Work_Mannal');
 });

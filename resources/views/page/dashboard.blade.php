@@ -335,5 +335,5 @@
     <script src="{{ url('dashmix/js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ url('dashmix/js/plugins/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ url('dashmix/js/plugins/flatpickr/l10n/th.js') }}"></script>
-    <script src="{{ url('js/page/dashboard.js') }}"></script>
+    <script src="{{ url('js/page/dashboard.js?t={{ time() }}') }}"></script>
 </html>

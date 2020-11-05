@@ -20,7 +20,10 @@ $(document).ready(function () {
             $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
         }, 0);
     });
-
+    // Table select_modal_salary_tab_1 เวลามีการเปลี่ยนวันที่ 
+    $(document).on('change', '#select_modal_salary_tab_1', function () {
+        Load_Dashboard_Data($(this).attr('emp_code'), $(this).attr('emp_team'), $(this).val());
+    });
     // Table select_modal_salary_tab_2 เวลามีการเปลี่ยนวันที่ 
     $.fn.dataTable.ext.errMode = 'none';
     $(document).on('change', '#select_modal_salary_tab_2', function () {

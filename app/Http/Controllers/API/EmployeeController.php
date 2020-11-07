@@ -26,7 +26,7 @@ class EmployeeController extends Controller
             }else {
                 // ถ้ามีในระบบแล้ว ให้อัพเดต ชื่อ นามสกุล
                 employee::where('emp_code',$request->emp_code)
-                    ->update(['emp_firstname' => $request->emp_firstname, 'emp_lastname' => $request->emp_lastname]);
+                    ->update(['emp_firstname' => $request->emp_firstname, 'emp_lastname' => $request->emp_lastname, 'emp_status' => $request->emp_status]);
             }
             // อัพเวลาที่ส่งเข้ามาล่าสุด
             team::where('team_id', $request->emp_team)

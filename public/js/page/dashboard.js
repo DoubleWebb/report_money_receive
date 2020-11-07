@@ -57,7 +57,11 @@ var Get_Employee = function Get_Employee() {
                     Data += '<div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">'
                     Data += '<dl class="mb-0">'
                     Data += '<dt class="text-muted mb-0">ล่าสุด : <span class="text-success">' + moment(value.emp_work_last).format('HH:mm:ss DD/MM/YYYY') + '</span></dt>'
-                    Data += '<dd class="text-muted mb-0">' + emp_firstname + ' ' + emp_lastname + '</dd>'
+                    if (value.emp_status == '0') {
+                        Data += '<dd class="text-muted mb-0">' + emp_firstname + ' ' + emp_lastname + '</dd> <span class="badge badge-danger">ลาออกแล้ว</span>'
+                    }else {
+                        Data += '<dd class="text-muted mb-0">' + emp_firstname + ' ' + emp_lastname + '</dd>'
+                    }
                     Data += '</dl>'
                     Data += '<div class="item item-rounded bg-body">'
                     Data += '<i class="fas fa-users font-size-h3 text-primary"></i>'

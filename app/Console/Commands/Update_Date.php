@@ -41,7 +41,7 @@ class Update_Date extends Command
      */
     public function handle()
     {
-        $get_work = work::whereDate('date_work', Carbon::now()->format('Y-m-d'))->get();
+        $get_work = work::whereDate('date_work', '>=', Carbon::now()->subDays(7))->whereDate('date_work' , '<=', Carbon::now()->format('Y-m-d'))->get();
         foreach ($get_work as $key => $row) {
             $check_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->count();
             // ถ้าพบข้อมูลให้ทำการ อัพเดต

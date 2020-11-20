@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\finger as finger;
 use App\Models\work as work;
 use App\Models\employee as employee;
+use App\Models\setting as setting;
 
 class Setting_Work extends Command
 {
@@ -41,32 +42,7 @@ class Setting_Work extends Command
      */
     public function handle()
     {
-        $get_work = work::whereDate('date_work', Carbon::now()->format('Y-m-d'))->get();
-        foreach ($get_work as $key => $row) {
-            $check_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->count();
-            // ถ้าพบข้อมูลให้ทำการ อัพเดต
-            if($check_finger == '1') {
-                // ถ้ามีการเข้างาน
-                $data_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->first();
-                $update_work = work::find($row->work_id);
-                $update_work->punch_time_in = $data_finger->punch_time;
-                $update_work->work_status = '1';
-                $update_work->save();         
-                // อัพเดต เวลาล่าสุด      
-                employee::where('emp_code', (int)$row->emp_code)
-                        ->where('emp_team', $row->emp_team)
-                        ->update(['emp_work_last' => $data_finger->punch_time]);
-            }else if ($check_finger >= '2') {
-                // ถ้ามีการหลายรอบ ออกงาน
-                $data_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->orderBy('finger_id', 'desc')->first();
-                $update_work = work::find($row->work_id);
-                $update_work->punch_time_out = $data_finger->punch_time;
-                $update_work->save(); 
-                // อัพเดต เวลาล่าสุด
-                employee::where('emp_code', (int)$row->emp_code)
-                        ->where('emp_team', $row->emp_team)
-                        ->update(['emp_work_last' => $data_finger->punch_time]);
-            }
-        }
+        $day_in_month = Carbon::now()->daysInMonth;
+        setting::where('setting_name', 'work_in_days')->update(['setting_value' => $day_in_month]);
     }
 }

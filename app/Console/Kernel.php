@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('create_date')->everyMinute();
         $schedule->command('create_special')->everyMinute();
-        $schedule->command('setting_work')->hourly();
+        $schedule->command('setting_work')->everyMinute();
         $schedule->command('update_date')->everyMinute();
         $schedule->command('update_money_date')->everyMinute();
         $schedule->command('snapshot_month')->everyMinute();

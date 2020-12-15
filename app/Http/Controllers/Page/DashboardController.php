@@ -180,7 +180,11 @@ class DashboardController extends Controller
                 return $ot.' '.$text_status;
             })
             ->addColumn('action', function ($data) {
-                return '<button class="btn btn-sm btn-primary" work_id="'.$data->work_id. '" onclick="Choose_A_Reduction(this)"><i class="fas fa-exchange-alt"></i> เปลี่ยนจำนวนเงิน</button>';
+                if (Auth::user()->type == 'admin') {
+                    return '<button class="btn btn-sm btn-primary" work_id="'.$data->work_id. '" onclick="Choose_A_Reduction(this)"><i class="fas fa-exchange-alt"></i> เปลี่ยนจำนวนเงิน</button>';
+                }else {
+                    return '';
+                }
             })
             ->rawColumns(['work_text_status','action'])
             ->make(true);
@@ -237,5 +241,38 @@ class DashboardController extends Controller
         $insert_holiday->save();
 
         return response()->json(['message' => 'เพิ่มข้อมูล ลาล่วงหน้า สำเร็จ'], 200);
+    }
+
+    public function Get_Button_Action(Request $request)
+    {
+        $check_work = work::whereDate('date_work', Carbon::now())->where('emp_code', $request->emp_code)->where('work_status', '1')->where('emp_team', $request->emp_team)->count();
+        $work_data = work::whereDate('date_work', Carbon::now())->where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)->first();
+        // IF = 0
+        if ($check_work == '0') {
+            $button_action_work = '<button class="btn btn-sm btn-success" work_date="'.Carbon::now().'" status="IN"  work_id="'.$work_data->work_id.'" onclick="Save_Action_Button(this)"><i class="fas fa-sign-in-alt"></i> เข้างาน</button>';
+        }elseif ($check_work == '1' && $work_data->punch_time_out == null) {
+            $button_action_work = '<button class="btn btn-sm btn-danger" work_date="'.Carbon::now().'" status="OUT" work_id="'.$work_data->work_id.'"  onclick="Save_Action_Button(this)"><i class="fas fa-sign-out-alt"></i> ออกงาน</button>';
+        }else {
+            $button_action_work = '';
+        }
+
+        $check_employee = employee::where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)->first();
+        $status = $check_employee->emp_status == '0' ? 'error': 'success';
+        $button_action_work = $check_employee->emp_status == '0' ? '' : $button_action_work;
+
+        return response()->json(['message' => 'ดึงข้อมูล Button' , 'status' => $status, 'button' => $button_action_work], 200);
+    }
+
+    public function Save_Button_Action(Request $request)
+    {
+        if ($request->status == 'IN') {
+            work::where('work_id', $request->work_id)->update(['punch_time_in' => $request->work_date, 'work_status' => '1']);
+            return response()->json(['message' => 'อัพเดตเวลาเข้างานสำเร็จ'], 200);
+        }elseif ($request->status == 'OUT') {
+            work::where('work_id', $request->work_id)->update(['punch_time_out' => $request->work_date]);
+            return response()->json(['message' => 'อัพเดตเวลาออกงานสำเร็จ'], 200);
+        }else {
+            return response()->json(['message' => 'Error'], 400);
+        }
     }
 }

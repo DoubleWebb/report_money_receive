@@ -69,7 +69,9 @@
                                 <div class="col-12 text-center">
                                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                                         <div class="flex-fill ml-3">
-                                            <p class="mb-0"><b><i class="fas fa-user-tie"></i> ชื่อพนักงาน | <span id="modal_salary_name_preview"></span></b></p>
+                                            <p class="mb-0"><b><i class="fas fa-user-tie"></i> ชื่อพนักงาน | <span id="modal_salary_name_preview"></span></b> 
+                                            | <span id="modal_salary_in_work"></span>
+                                            </p>
                                         </div>
                                     </div>                            
                                 </div>
@@ -85,9 +87,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="#tab_3"><i class="fas fa-dove"></i> ลา ล่วงหน้า</a>
                                     </li>
+                                    @if (Auth::user()->type == 'admin')
                                     <li class="nav-item ml-auto">
                                         <a class="nav-link" href="#tab_right"><i class="si si-settings"></i> ตั้งค่า</a>
                                     </li>
+                                    @endif
                                 </ul>
                                 <div class="block-content tab-content">
                                     <div class="tab-pane active" id="tab_1" role="tabpanel">

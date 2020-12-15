@@ -29,6 +29,8 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('save_choose_a_reduction', 'Page\DashboardController@Save_Choose_A_Reduction');
     Route::get('get_table_holiday_in_advance', 'Page\DashboardController@Get_Table_Holiday_In_Advance');
     Route::post('save_holiday_in_advance', 'Page\DashboardController@Save_Holiday_In_Advance');
+    Route::post('get_button_action', 'Page\DashboardController@Get_Button_Action');
+    Route::post('save_button_action', 'Page\DashboardController@Save_Button_Action');
     // Page Setting Soecial Days
     Route::get('get_table_setting_special_days', 'Page\SettingController@Get_Table_Setting_Special_Days');
     Route::post('save_create_special_day', 'Page\SettingController@Save_Create_Special_Day');

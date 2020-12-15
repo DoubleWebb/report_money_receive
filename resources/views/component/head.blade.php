@@ -26,6 +26,7 @@
                         <span class="nav-main-link-name">Dashboard</span>
                     </a>
                 </li>
+                @if (Auth::user()->type == 'admin')
                 <li class="nav-main-item">
                     <a class="nav-main-link @php if(collect(request()->segments())->last() == 'setting_team') { echo 'active'; }  @endphp" href="{{ route('setting_team') }}">
                         <i class="nav-main-link-icon fas fa-cogs"></i>
@@ -38,7 +39,6 @@
                         <span class="nav-main-link-name">Setting Special Days</span>
                     </a>
                 </li>     
-                @if (Auth::user()->type == 'admin')
                 <li class="nav-main-item">
                     <a class="nav-main-link @php if(collect(request()->segments())->last() == 'setting_user') { echo 'active'; }  @endphp" href="{{ route('setting_user') }}">
                         <i class="nav-main-link-icon fas fa-users"></i>

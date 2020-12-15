@@ -95,7 +95,8 @@ var Open_Modl_Salary = function Open_Modl_Salary(e) {
     var firstname = $(e).attr('firstname') != null ? $(e).attr('firstname') : '';
     var lastname = $(e).attr('lastname') != null ? $(e).attr('lastname') : '';
     $("#modal_salary_name_preview").html(firstname + ' ' + lastname);
-    
+    // 
+    Load_Action_Button(emp_code, emp_team);
     // เปิดการโหลดข้อมูลสำหรับการแสดง
     Load_Empolyee_Data(emp_code, emp_team);
     // โหลดข้อมูล พนักงาน
@@ -109,6 +110,53 @@ var Open_Modl_Salary = function Open_Modl_Salary(e) {
         $("#modal_salary_name_preview").html('');
         $("#input_emp_salary").val('');
     });
+}
+
+var Load_Action_Button = function Load_Action_Button(emp_code, emp_team) {
+    // Button Action Work
+    axios({
+        method: 'POST',
+        url: '/api/v1/get_button_action',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: {
+            emp_code: emp_code,
+            emp_team: emp_team
+        }
+    })
+    .then(function (response) {
+        $("#modal_salary_in_work").html(response.data.button);
+    })
+    .catch(function (error) {
+        console.log(error.response);
+    })
+}
+
+var Save_Action_Button = function Save_Action_Button(e) {
+    var Toast = Set_Toast();
+    axios({
+        method: 'POST',
+        url: '/api/v1/save_button_action',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: {
+            work_id: $(e).attr('work_id'),
+            work_date: $(e).attr('work_date'),
+            status: $(e).attr('status')
+        }
+    })
+    .then(function (response) {
+        $("#modal_salary").modal('hide');
+        Toast.fire({
+            icon: 'success',
+            title: response.data.message
+        })
+    })
+    .catch(function (error) {
+        console.log(error.response);
+    })
 }
 
 var Load_Select_Empolyee = function Load_Select_Empolyee(emp_code, emp_team) {

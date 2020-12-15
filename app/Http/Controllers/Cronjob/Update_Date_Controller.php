@@ -30,15 +30,28 @@ class Update_Date_Controller extends Controller
                         ->where('emp_team', $row->emp_team)
                         ->update(['emp_work_last' => $data_finger->punch_time]);
             }else if ($check_finger >= '2') {
-                // ถ้ามีการหลายรอบ ออกงาน
-                $data_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->orderBy('finger_id', 'desc')->first();
-                $update_work = work::find($row->work_id);
-                $update_work->punch_time_out = $data_finger->punch_time;
-                $update_work->save(); 
-                // อัพเดต เวลาล่าสุด
-                employee::where('emp_code', (int)$row->emp_code)
-                        ->where('emp_team', $row->emp_team)
-                        ->update(['emp_work_last' => $data_finger->punch_time]);
+                if ($get_work->punch_time_in == null) {
+                    // ถ้ามีการหลายรอบ ออกงาน
+                    $data_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->orderBy('finger_id', 'asc')->first();
+                    $update_work = work::find($row->work_id);
+                    $update_work->punch_time_in = $data_finger->punch_time;
+                    $update_work->work_status = '1';
+                    $update_work->save(); 
+                    // อัพเดต เวลาล่าสุด
+                    employee::where('emp_code', (int)$row->emp_code)
+                            ->where('emp_team', $row->emp_team)
+                            ->update(['emp_work_last' => $data_finger->punch_time]);                   
+                }else {
+                    // ถ้ามีการหลายรอบ ออกงาน
+                    $data_finger = finger::whereDate('finger_date', $row->date_work)->where('emp_code', (int)$row->emp_code)->where('emp_team', $row->emp_team)->orderBy('finger_id', 'desc')->first();
+                    $update_work = work::find($row->work_id);
+                    $update_work->punch_time_out = $data_finger->punch_time;
+                    $update_work->save(); 
+                    // อัพเดต เวลาล่าสุด
+                    employee::where('emp_code', (int)$row->emp_code)
+                            ->where('emp_team', $row->emp_team)
+                            ->update(['emp_work_last' => $data_finger->punch_time]);   
+                }
             }
         }
 

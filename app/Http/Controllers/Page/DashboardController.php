@@ -268,14 +268,14 @@ class DashboardController extends Controller
         if ($request->status == 'IN') {
             work::where('work_id', $request->work_id)->update(['punch_time_in' => $request->work_date, 'work_status' => '1']);
             // อัพเดต เวลาล่าสุด
-            employee::where('emp_code', (int)$request->emp_code)
+            employee::where('emp_code', $request->emp_code)
                     ->where('emp_team', $request->emp_team)
                     ->update(['emp_work_last' => $request->work_date]);   
             return response()->json(['message' => 'อัพเดตเวลาเข้างานสำเร็จ'], 200);
         }elseif ($request->status == 'OUT') {
             work::where('work_id', $request->work_id)->update(['punch_time_out' => $request->work_date]);
             // อัพเดต เวลาล่าสุด
-            employee::where('emp_code', (int)$request->emp_code)
+            employee::where('emp_code', $request->emp_code)
                     ->where('emp_team', $request->emp_team)
                     ->update(['emp_work_last' => $request->work_date]);   
             return response()->json(['message' => 'อัพเดตเวลาออกงานสำเร็จ'], 200);

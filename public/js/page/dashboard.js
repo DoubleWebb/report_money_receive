@@ -144,7 +144,9 @@ var Save_Action_Button = function Save_Action_Button(e) {
         data: {
             work_id: $(e).attr('work_id'),
             work_date: $(e).attr('work_date'),
-            status: $(e).attr('status')
+            status: $(e).attr('status'),
+            emp_code: $(e).attr('emp_code'),
+            emp_team: $(e).attr('emp_team')
         }
     })
     .then(function (response) {

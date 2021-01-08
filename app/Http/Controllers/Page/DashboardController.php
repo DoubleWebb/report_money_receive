@@ -248,13 +248,14 @@ class DashboardController extends Controller
         $check_work = work::whereDate('date_work', Carbon::now())->where('emp_code', $request->emp_code)->where('work_status', '1')->where('emp_team', $request->emp_team)->count();
         $work_data = work::whereDate('date_work', Carbon::now())->where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)->first();
         // IF = 0
-        if ($check_work == '0') {
-            $button_action_work = '<button class="btn btn-sm btn-success" work_date="'.Carbon::now().'" status="IN"  work_id="'.$work_data->work_id.'" emp_code="'.$request->emp_code.'" emp_team="'.$request->emp_team.'" onclick="Save_Action_Button(this)"><i class="fas fa-sign-in-alt"></i> เข้างาน</button>';
-        }elseif ($check_work == '1' && $work_data->punch_time_out == null) {
-            $button_action_work = '<button class="btn btn-sm btn-danger" work_date="'.Carbon::now().'" status="OUT" work_id="'.$work_data->work_id.'" emp_code="'.$request->emp_code.'" emp_team="'.$request->emp_team.'" onclick="Save_Action_Button(this)"><i class="fas fa-sign-out-alt"></i> ออกงาน</button>';
-        }else {
-            $button_action_work = '';
-        }
+        // if ($check_work == '0') {
+        //     $button_action_work = '<button class="btn btn-sm btn-success" work_date="'.Carbon::now().'" status="IN"  work_id="'.$work_data->work_id.'" emp_code="'.$request->emp_code.'" emp_team="'.$request->emp_team.'" onclick="Save_Action_Button(this)"><i class="fas fa-sign-in-alt"></i> เข้างาน</button>';
+        // }elseif ($check_work == '1' && $work_data->punch_time_out == null) {
+        //     $button_action_work = '<button class="btn btn-sm btn-danger" work_date="'.Carbon::now().'" status="OUT" work_id="'.$work_data->work_id.'" emp_code="'.$request->emp_code.'" emp_team="'.$request->emp_team.'" onclick="Save_Action_Button(this)"><i class="fas fa-sign-out-alt"></i> ออกงาน</button>';
+        // }else {
+        //     $button_action_work = '';
+        // }
+        $button_action_work = '';
 
         $check_employee = employee::where('emp_code', $request->emp_code)->where('emp_team', $request->emp_team)->first();
         $status = $check_employee->emp_status == '0' ? 'error': 'success';
